@@ -28,5 +28,11 @@ module.exports = {
         const token = signToken(user);
         return { token, user };
       },
+      addUser: async (parent, { name, email, password }) => {
+        const user = await User.create({ name, email, password });
+        const token = signToken(user);
+  
+        return { token, user };
+      },
     },
   };
