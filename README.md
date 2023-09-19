@@ -1,6 +1,6 @@
 # Book-Search-Engine
 
-![Screenshot]()
+![Screenshot](./book-search-screenshot.JPG)
 
 ## Description
 
