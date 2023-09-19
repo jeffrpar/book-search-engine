@@ -1,6 +1,7 @@
 const { AuthenticationError } = require("apollo-server-express");
 const { User } = require("../models");
 const { signToken } = require("../utils/auth");
+const bcrypt = require('bcrypt');
 
 module.exports = {
   Query: {
@@ -29,10 +30,28 @@ module.exports = {
       return { token, user };
     },
     addUser: async (parent, { name, email, password }) => {
-      const user = await User.create({ name, email, password });
-      const token = signToken(user);
+      try {
+        // Check if a user with the same email already exists
+        const existingUser = await User.findOne({ email });
 
-      return { token, user };
+        if (existingUser) {
+          throw new AuthenticationError('User with this email already exists');
+        }
+
+        // Hash the user's password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create the new user
+        const user = await User.create({ name, email, password: hashedPassword });
+
+        // Generate a token for the new user
+        const token = signToken(user);
+
+        return { token, user };
+      } catch (error) {
+        console.error(error);
+        throw new AuthenticationError('Unable to create user');
+      }
     },
     saveBook: async (parent, args, context) => {
       if (context.user) {
