@@ -4,14 +4,13 @@
 
 ## Description
 
-
+This application is a modern web-based book management tool that allows users to create accounts, log in, and interact with a virtual library of books. The application provides a user-friendly interface for browsing and managing books, complete with book covers, descriptions, and author information. It also offers features like the ability to search for books, view saved books, and delete books from their saved collection. Behind the scenes, it uses technologies like Apollo Client, GraphQL, and a Node.js server to facilitate data retrieval and manipulation, providing a seamless and responsive user experience. Overall, the application empowers users to curate their own digital bookshelves with ease and convenience.
 
 ## Table of Contents
 
 - [Live-Deployment](#live-deployment)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Credits](#credits)
 - [Contributing-Guidelines](#contributing-guidelines)
 - [Future-Development-Goals](#future-development-goals)
 - [Tests](#tests)
@@ -34,7 +33,7 @@ https://book-search-utsa-3052c59c3787.herokuapp.com/
 
 ## Usage
 
-
+Users can sign up for new accounts, log in securely, and save books to their personal library. They can also remove books from their library if they no longer wish to keep them.
 
 ## Contributing-Guidelines
 
@@ -75,7 +74,11 @@ Your pull request will be reviewed by the maintainers, who may provide feedback 
 
 ## Future-Development-Goals
 
+User Profiles: Implement user profiles where users can add additional information about themselves, such as profile pictures, biographies, or reading preferences.
 
+Social Features: Allow users to connect with other users, follow their reading activity, share book recommendations, and create reading groups or communities.
+
+Reading Lists: Allow users to create and manage reading lists or wish lists, helping them plan their reading goals and keeping track of books they intend to read in the future.
 
 ## Tests
 
