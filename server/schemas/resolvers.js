@@ -1,31 +1,28 @@
-const { AuthenticationError } = require("apollo-server-express");
-const { User } = require("../models");
-const { signToken } = require("../utils/auth");
-const bcrypt = require('bcrypt');
+const { User, Book } = require("../models");
+const { signToken } = require("../utils/auth")
 
-module.exports = {
+const resolvers = {
   Query: {
     me: async (parent, args, context) => {
+      console.log(context.user)
       if (context.user) {
         return User.findOne({ _id: context.user._id });
       }
-      throw new Error("User not authenticated");
+      throw new Error("user not found");
     },
   },
   Mutation: {
-    login: async (parent, { email, password }) => {
-      const user = await User.findOne({ email });
-    
+    login: async (parent, args) => {
+      const user = await User.findOne({ email: args.email });
       if (!user) {
-        throw new AuthenticationError("No profile with this email found!");
+        throw new Error("user not found");
       }
-    
-      const correctPw = await bcrypt.compare(password, user.password);
-    
-      if (!correctPw) {
-        throw new AuthenticationError("Incorrect password!");
+      const isCorrectPassword = await user.isCorrectPassword(args.password);
+      console.log(!isCorrectPassword);
+      if (!isCorrectPassword) {
+        
+        throw new Error("incorrect credentials");
       }
-    
       const token = signToken(user);
       return { token, user };
     },
@@ -33,28 +30,36 @@ module.exports = {
       const user = await User.create(args);
       const token = signToken(user);
       return { token, user };
-    },    
+    },
     saveBook: async (parent, args, context) => {
       if (context.user) {
         const updatedUser = await User.findByIdAndUpdate(
-          { _id: context.user._id },
-          { $push: { savedBooks: args.input } },
-          { new: true },
+          {
+            _id: context.user._id,
+          },
+          {
+            $push: {
+              savedBooks: args.input,
+            },
+          },
+          { new: true }
         );
         return updatedUser;
       }
-      throw new Error("User not found");
+      throw new Error("user not found");
     },
     removeBook: async (parent, args, context) => {
       if (context.user) {
         const updatedUser = await User.findByIdAndUpdate(
-          { _id: context.user._id },
-          { $pull: { savedBooks: args.bookId } },
-          { new: true },
+          {_id: context.user._id,},
+          {$pull: {savedBooks: {bookId: args.bookId}}},
+          {new: true}
         );
         return updatedUser;
       }
-      throw new Error("User not found");
+      throw new Error("user not found");
     },
   },
 };
+
+module.exports = resolvers;
